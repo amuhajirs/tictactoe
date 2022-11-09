@@ -20,15 +20,16 @@ class App(tk.Tk):
         if self.frame is not None:
             self.frame.destroy()
         self.frame = new_frame
-        self.frame.pack()
+        self.frame.pack(expand=True)
 
 class TicTacToeMenu(tk.Frame):
     def __init__(self, master):
         # Main menu of TicTacToe
         tk.Frame.__init__(self, master)
-        tk.Label(self, text='Tic-Tac-Toe', font=('Arial', 30), fg='white', bg='black').pack()
-        tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack()
-        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: exit()).pack()
+        self.configure(bg='black')
+        tk.Label(self, text='Tic-Tac-Toe', font=('Arial', 30), fg='white', bg='black').pack(pady=20, padx=20)
+        tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack(pady=2)
+        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: exit()).pack(pady=(2, 20))
 
         # Shortcut key for go to TicTacToe game and exit 
         master.bind('<Return>', lambda event: master.switch_frame(TicTacToeGame))
@@ -43,7 +44,7 @@ class TicTacToeGame(tk.Frame):
         self.current_turn = self.players[0]
 
         self.turn_label = tk.Label(self, text=f'{self.current_turn} turn', font=('Arial', 30), bg='black', fg='white')
-        self.turn_label.pack(side='top')
+        self.turn_label.pack(side='top', pady=20)
         self.board = [
             ['--', '--', '--'],
             ['--', '--', '--'],
@@ -51,17 +52,20 @@ class TicTacToeGame(tk.Frame):
         ]
 
         # Make boxes by using buttons to play tictactoe
-        frame = tk.Frame(self)
-        frame.pack()
+        self.box_frame = tk.Frame(self)
+        self.box_frame.pack()
         for row in range(3):
             for column in range(3):
-                self.board[row][column] = tk.Button(frame, text='', font=('arial', 20), width=5, height=2, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
+                self.board[row][column] = tk.Button(self.box_frame, text='', font=('arial', 20), width=5, height=2, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
                 self.board[row][column].grid(row=row, column=column)
 
         # Restart and exit button
-        tk.Button(self, text='Restart', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: self.new_game()).pack()
-        tk.Button(self, text='Back', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.switch_frame(TicTacToeMenu)).pack()
-        tk.Button(self, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: exit()).pack(side='bottom')
+        self.button_frame = tk.Frame(self)
+        self.button_frame.configure(bg='black')
+        self.button_frame.pack(padx=20, pady=20)
+        tk.Button(self.button_frame, text='Restart', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: self.new_game()).grid(row=0, column=0, padx=2)
+        tk.Button(self.button_frame, text='Back', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.switch_frame(TicTacToeMenu)).grid(row=0, column=1, padx=2)
+        tk.Button(self.button_frame, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: exit()).grid(row=0, column=2, padx=2)
 
         # Shortkut Key
         master.bind('<Return>', lambda event: self.new_game())
