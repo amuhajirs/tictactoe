@@ -7,7 +7,7 @@ class App(tk.Tk):
         tk.Tk.__init__(self)
         self.title('Tic-Tac-Toe')
         self.configure(bg='black')
-        self.photo = tk.PhotoImage(file='J item.png')
+        self.photo = tk.PhotoImage(file='icon.png')
         self.iconphoto(False, self.photo)
         self.frame = None
         
@@ -29,11 +29,11 @@ class TicTacToeMenu(tk.Frame):
         self.configure(bg='black')
         tk.Label(self, text='Tic-Tac-Toe', font=('Arial', 30), fg='white', bg='black').pack(pady=20, padx=20)
         tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack(pady=2)
-        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: exit()).pack(pady=(2, 20))
+        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: self.destroy()).pack(pady=(2, 20))
 
         # Shortcut key for go to TicTacToe game and exit 
         master.bind('<Return>', lambda event: master.switch_frame(TicTacToeGame))
-        master.bind('<Escape>', lambda event: exit())
+        master.bind('<Escape>', lambda event: master.destroy())
 
 class TicTacToeGame(tk.Frame):
     def __init__(self, master):
@@ -65,7 +65,7 @@ class TicTacToeGame(tk.Frame):
         self.button_frame.pack(padx=20, pady=20)
         tk.Button(self.button_frame, text='Restart', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: self.new_game()).grid(row=0, column=0, padx=2)
         tk.Button(self.button_frame, text='Back', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.switch_frame(TicTacToeMenu)).grid(row=0, column=1, padx=2)
-        tk.Button(self.button_frame, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: exit()).grid(row=0, column=2, padx=2)
+        tk.Button(self.button_frame, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.destroy()).grid(row=0, column=2, padx=2)
 
         # Shortkut Key
         master.bind('<Return>', lambda event: self.new_game())
