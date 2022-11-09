@@ -1,38 +1,47 @@
+# Import required library
 import tkinter as tk
 
 class App(tk.Tk):
     def __init__(self):
+        # Create window
         tk.Tk.__init__(self)
         self.title('Tic-Tac-Toe')
-        self.photo = tk.PhotoImage(file='C:/Users/HP/Pictures/foto/J item.png')
+        self.configure(bg='black')
+        self.photo = tk.PhotoImage(file='J item.png')
         self.iconphoto(False, self.photo)
-        self._frame = None
+        self.frame = None
+        
+        # Go to main menu of TicTacToe
         self.switch_frame(TicTacToeMenu)
-
+        
     def switch_frame(self, frame_class):
-        # Destroys current frame and replaces it with a new one
+        # Function for switch frame by destroy current frame and replaces it with a new one
         new_frame = frame_class(self)
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = new_frame
-        self._frame.pack()
+        if self.frame is not None:
+            self.frame.destroy()
+        self.frame = new_frame
+        self.frame.pack()
 
 class TicTacToeMenu(tk.Frame):
     def __init__(self, master):
+        # Main menu of TicTacToe
         tk.Frame.__init__(self, master)
         tk.Label(self, text='Tic-Tac-Toe', font=('Arial', 30), fg='white', bg='black').pack()
-        tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeBoard)).pack()
+        tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack()
         tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: exit()).pack()
 
-        master.bind('<Return>', lambda event: master.switch_frame(TicTacToeBoard))
+        # Shortcut key for go to TicTacToe game and exit 
+        master.bind('<Return>', lambda event: master.switch_frame(TicTacToeGame))
         master.bind('<Escape>', lambda event: exit())
 
-class TicTacToeBoard(tk.Frame):
+class TicTacToeGame(tk.Frame):
     def __init__(self, master):
+        # TicTacToe game
         tk.Frame.__init__(self, master)
         self.configure(bg='black')
-        self.players = ['x', 'o']
+        self.players = ['X', 'O']
         self.current_turn = self.players[0]
+
         self.turn_label = tk.Label(self, text=f'{self.current_turn} turn', font=('Arial', 30), bg='black', fg='white')
         self.turn_label.pack(side='top')
         self.board = [
@@ -41,17 +50,22 @@ class TicTacToeBoard(tk.Frame):
             ['--', '--', '--']
         ]
 
+        # Make boxes by using buttons to play tictactoe
         frame = tk.Frame(self)
         frame.pack()
-
         for row in range(3):
             for column in range(3):
                 self.board[row][column] = tk.Button(frame, text='', font=('arial', 20), width=5, height=2, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
                 self.board[row][column].grid(row=row, column=column)
 
+        # Restart and exit button
         tk.Button(self, text='Restart', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: self.new_game()).pack()
+        tk.Button(self, text='Back', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.switch_frame(TicTacToeMenu)).pack()
         tk.Button(self, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: exit()).pack(side='bottom')
+
+        # Shortkut Key
         master.bind('<Return>', lambda event: self.new_game())
+        master.bind('<BackSpace>', lambda event: master.switch_frame(TicTacToeMenu))
         master.bind('1', lambda event: self.next_turn(0,0))
         master.bind('2', lambda event: self.next_turn(0,1))
         master.bind('3', lambda event: self.next_turn(0,2))
@@ -63,8 +77,11 @@ class TicTacToeBoard(tk.Frame):
         master.bind('9', lambda event: self.next_turn(2,2))
 
     def next_turn(self, row, column):
+        # If the button is pressed, it will chenge text button to 'o' or 'x'
         if self.board[row][column]['text'] == '' and self.check_winner() is False:
             self.board[row][column]['text'] = self.current_turn
+            
+            # Changed the label for who is running now
             if self.check_winner() is False:
                 if self.current_turn == self.players[0]:
                     self.current_turn = self.players[1]
@@ -73,6 +90,7 @@ class TicTacToeBoard(tk.Frame):
                     self.current_turn = self.players[0]
                     self.turn_label['text'] = f'{self.current_turn} turn'
 
+            # Changed the label for who won or drew
             elif self.check_winner() is True:
                 self.turn_label['text'] = f'{self.current_turn} win!'
 
@@ -80,19 +98,19 @@ class TicTacToeBoard(tk.Frame):
                 self.turn_label['text'] = 'Tie'
 
     def check_winner(self):
-        # Check Row
+        # Check row
         for row in range(3):
             if self.board[row][0]['text'] == self.board[row][1]['text'] == self.board[row][2]['text'] != '':
-                # Change button's background color when someone win
+                # Change the background of the button to Green if there is a win
                 self.board[row][0]['bg']= 'green'
                 self.board[row][1]['bg']= 'green'
                 self.board[row][2]['bg']= 'green'
                 return True
 
-        # Check Column
+        # Check column
         for column in range(3):
             if self.board[0][column]['text'] == self.board[1][column]['text'] == self.board[2][column]['text'] != '':
-                # Change button's background color when someone win
+                # Change the background of the button to Green if there is a win
                 self.board[0][column]['bg']= 'green'
                 self.board[1][column]['bg']= 'green'
                 self.board[2][column]['bg']= 'green'
@@ -100,20 +118,20 @@ class TicTacToeBoard(tk.Frame):
 
         # Check Diagonal
         if self.board[0][0]['text'] == self.board[1][1]['text'] == self.board[2][2]['text'] != '':
-            # Change button's background color when someone win
+            # Change the background of the button to Green if there is a win
             self.board[0][0]['bg']= 'green'
             self.board[1][1]['bg']= 'green'
             self.board[2][2]['bg']= 'green'
             return True
 
         elif self.board[0][2]['text'] == self.board[1][1]['text'] == self.board[2][0]['text'] != '':
-            # Change button's background color when someone win
+            # Change the background of the button to Green if there is a win
             self.board[0][2]['bg']= 'green'
             self.board[1][1]['bg']= 'green'
             self.board[2][0]['bg']= 'green'
             return True
 
-        # Check Tie
+        # Check tie
         else:
             self.spaces = 9
             for row in range(3):
@@ -123,10 +141,11 @@ class TicTacToeBoard(tk.Frame):
             if self.spaces == 0:
                 return 'Tie'
 
-        # Game isn't over
+        # game hasn't finished yet
         return False
 
     def new_game(self):
+        # Function for restart game
         for row in range(3):
             for column in range(3):
                 self.board[row][column]['text'] = ''
@@ -135,5 +154,6 @@ class TicTacToeBoard(tk.Frame):
         self.turn_label['text'] = f'{self.current_turn} turn'
 
 if __name__ == '__main__':
+    # Start the program
     tictactoe = App()
     tictactoe.mainloop()
