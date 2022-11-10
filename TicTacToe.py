@@ -7,8 +7,7 @@ class App(tk.Tk):
         tk.Tk.__init__(self)
         self.title('Tic-Tac-Toe')
         self.configure(bg='black')
-        self.photo = tk.PhotoImage(file='icon.png')
-        self.iconphoto(False, self.photo)
+        self.iconbitmap('ttt_icon.ico')
         self.frame = None
         
         # Go to main menu of TicTacToe
@@ -29,7 +28,7 @@ class TicTacToeMenu(tk.Frame):
         self.configure(bg='black')
         tk.Label(self, text='Tic-Tac-Toe', font=('Arial', 30), fg='white', bg='black').pack(pady=20, padx=20)
         tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack(pady=2)
-        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: self.destroy()).pack(pady=(2, 20))
+        tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.destroy()).pack(pady=(2, 20))
 
         # Shortcut key for go to TicTacToe game and exit 
         master.bind('<Return>', lambda event: master.switch_frame(TicTacToeGame))
@@ -40,10 +39,10 @@ class TicTacToeGame(tk.Frame):
         # TicTacToe game
         tk.Frame.__init__(self, master)
         self.configure(bg='black')
-        self.players = ['X', 'O']
+        self.players = [['X', 'red'], ['O', 'blue']]
         self.current_turn = self.players[0]
 
-        self.turn_label = tk.Label(self, text=f'{self.current_turn} turn', font=('Arial', 30), bg='black', fg='white')
+        self.turn_label = tk.Label(self, text=f'{self.current_turn[0]} turn', font=('Arial', 30), bg='black', fg=self.current_turn[1])
         self.turn_label.pack(side='top', pady=20)
         self.board = [
             ['--', '--', '--'],
@@ -81,25 +80,30 @@ class TicTacToeGame(tk.Frame):
         master.bind('9', lambda event: self.next_turn(2,2))
 
     def next_turn(self, row, column):
-        # If the button is pressed, it will chenge text button to 'o' or 'x'
+        # If the button is pressed, it will chenge text button to 'X' or 'O'
         if self.board[row][column]['text'] == '' and self.check_winner() is False:
-            self.board[row][column]['text'] = self.current_turn
+            self.board[row][column]['text'] = self.current_turn[0]
+            self.board[row][column]['fg'] = self.current_turn[1]
             
             # Changed the label for who is running now
             if self.check_winner() is False:
                 if self.current_turn == self.players[0]:
                     self.current_turn = self.players[1]
-                    self.turn_label['text'] = f'{self.current_turn} turn'
+                    self.turn_label['text'] = f'{self.current_turn[0]} turn'
+                    self.turn_label['fg'] = self.current_turn[1]
                 else:
                     self.current_turn = self.players[0]
-                    self.turn_label['text'] = f'{self.current_turn} turn'
+                    self.turn_label['text'] = f'{self.current_turn[0]} turn'
+                    self.turn_label['fg'] = self.current_turn[1]
 
             # Changed the label for who won or drew
             elif self.check_winner() is True:
-                self.turn_label['text'] = f'{self.current_turn} win!'
+                self.turn_label['text'] = f'{self.current_turn[0]} win!'
+                self.turn_label['fg'] = self.current_turn[1]
 
             elif self.check_winner() == 'Tie':
                 self.turn_label['text'] = 'Tie'
+                self.turn_label['fg'] = 'White'
 
     def check_winner(self):
         # Check row
@@ -155,7 +159,8 @@ class TicTacToeGame(tk.Frame):
                 self.board[row][column]['text'] = ''
                 self.board[row][column]['bg'] ='#373737'
         self.current_turn = self.players[0]
-        self.turn_label['text'] = f'{self.current_turn} turn'
+        self.turn_label['text'] = f'{self.current_turn[0]} turn'
+        self.turn_label['fg'] = self.current_turn[1]
 
 if __name__ == '__main__':
     # Start the program
