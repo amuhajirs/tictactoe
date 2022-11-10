@@ -55,7 +55,7 @@ class TicTacToeGame(tk.Frame):
         self.box_frame.pack()
         for row in range(3):
             for column in range(3):
-                self.board[row][column] = tk.Button(self.box_frame, text='', font=('arial', 20), width=5, height=2, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
+                self.board[row][column] = tk.Button(self.box_frame, text='', font=('arial', 35), width=3, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
                 self.board[row][column].grid(row=row, column=column)
 
         # Restart and exit button
