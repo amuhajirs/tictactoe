@@ -30,7 +30,7 @@ class TicTacToeMenu(tk.Frame):
         tk.Button(self, text='Start', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.switch_frame(TicTacToeGame)).pack(pady=2)
         tk.Button(self, text='Exit', font=('Arial', 15), width=18, fg='white', bg='#373737', command=lambda: master.destroy()).pack(pady=(2, 20))
 
-        # Shortcut key for go to TicTacToe game and exit 
+        # Keybind for go to TicTacToe game and exit 
         master.bind('<Return>', lambda event: master.switch_frame(TicTacToeGame))
         master.bind('<Escape>', lambda event: master.destroy())
 
@@ -55,7 +55,7 @@ class TicTacToeGame(tk.Frame):
         self.box_frame.pack()
         for row in range(3):
             for column in range(3):
-                self.board[row][column] = tk.Button(self.box_frame, text='', font=('arial', 35), width=3, fg='white', bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
+                self.board[row][column] = tk.Button(self.box_frame, text='', font=('arial', 35), width=3, bg='#373737', command=lambda row=row, column=column: self.next_turn(row, column))
                 self.board[row][column].grid(row=row, column=column)
 
         # Restart and exit button
@@ -66,7 +66,7 @@ class TicTacToeGame(tk.Frame):
         tk.Button(self.button_frame, text='Back', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.switch_frame(TicTacToeMenu)).grid(row=0, column=1, padx=2)
         tk.Button(self.button_frame, text='Exit', font=('Arial', 15), width=8, bg='#373737', fg='white', command=lambda: master.destroy()).grid(row=0, column=2, padx=2)
 
-        # Shortkut Key
+        # Keybind
         master.bind('<Return>', lambda event: self.new_game())
         master.bind('<BackSpace>', lambda event: master.switch_frame(TicTacToeMenu))
         master.bind('1', lambda event: self.next_turn(0,0))
@@ -80,7 +80,7 @@ class TicTacToeGame(tk.Frame):
         master.bind('9', lambda event: self.next_turn(2,2))
 
     def next_turn(self, row, column):
-        # If the button is pressed, it will chenge text button to 'X' or 'O'
+        # If the button is pressed, it will change text button to 'X' or 'O'
         if self.board[row][column]['text'] == '' and self.check_winner() is False:
             self.board[row][column]['text'] = self.current_turn[0]
             self.board[row][column]['fg'] = self.current_turn[1]
