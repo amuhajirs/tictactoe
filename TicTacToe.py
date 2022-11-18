@@ -8,7 +8,7 @@ class App(tk.Tk):
         self.title('Tic-Tac-Toe')
         self.configure(bg='black')
         self.iconbitmap('ttt_icon.ico')
-        self.frame = None
+        self.__frame = None
         
         # Go to main menu of TicTacToe
         self.switch_frame(TicTacToeMenu)
@@ -16,10 +16,10 @@ class App(tk.Tk):
     def switch_frame(self, frame_class):
         # Function for switch frame by destroy current frame and replaces it with a new one
         new_frame = frame_class(self)
-        if self.frame is not None:
-            self.frame.destroy()
-        self.frame = new_frame
-        self.frame.pack(expand=True)
+        if self.__frame is not None:
+            self.__frame.destroy()
+        self.__frame = new_frame
+        self.__frame.pack(expand=True)
 
 class TicTacToeMenu(tk.Frame):
     def __init__(self, master):
